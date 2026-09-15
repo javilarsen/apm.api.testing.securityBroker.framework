@@ -1,10 +1,16 @@
 import requests
+import urllib3
 from config.settings import settings
+
+# Desactivar las advertencias de SSL inseguro en la consola
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class BaseClient:
     def __init__(self, base_url: str = settings.BASE_URL):
         self.base_url = base_url
         self.session = requests.Session()
+        # Desactiva la verificación de certificado para localhost
+        self.session.verify = False
         self.session.headers.update({
             "Content-Type": "application/json",
             "Accept": "application/json"

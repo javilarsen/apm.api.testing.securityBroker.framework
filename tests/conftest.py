@@ -1,6 +1,6 @@
 import pytest
-from services.user_service import UserService
+from services.product_service import ProductService
 
 @pytest.fixture
-def user_service():
-    return UserService()
+def product_service():
+    return ProductService()
