@@ -24,3 +24,19 @@ class TestProducts:
             assert products[0].productId is not None
             assert isinstance(products[0].productName, str)
             assert isinstance(products[0].isActive, bool)
+
+    @pytest.mark.smoke
+    def test_get_all_products_matches_db(self, product_service, db_client):
+        # 1. Obtener respuesta de la API
+        response = product_service.get_all_products()
+        assert response.status_code == 200, f"Se esperaba 200 pero fue {response.status_code}"
+        
+        api_products = response.json()
+
+        # 2. Consultar registros directamente en SQL Server
+        # (Ajusta los nombres de tabla y columnas a tu estructura de BD)
+        query = "SELECT ProductId, ProductCode, ProductName FROM dbo.Product WHERE IsActive = 1"
+        db_products = db_client.execute_query(query)
+
+        # 3. Aserciones / Validaciones
+        assert len(api_products) == len(db_products), "La cantidad de productos en API no coincide con la BD"
